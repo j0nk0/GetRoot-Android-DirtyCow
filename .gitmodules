@@ -1,0 +1,3 @@
+[submodule "CVE-2016-5195"]
+	path = CVE-2016-5195
+	url = https://github.com/timwr/CVE-2016-5195.git
