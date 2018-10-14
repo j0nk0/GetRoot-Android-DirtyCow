@@ -68,3 +68,9 @@ And running:
 Should output "uid=0":
 
   uid=0(root) gid=0(root) groups=0(root),1004(input),1007(log)......
+  
+  
+  
+  Other info/links:
+  https://github.com/dirtycow/dirtycow.github.io/wiki/PoCs
+  https://dirtycow.ninja/
