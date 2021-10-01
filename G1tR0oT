@@ -12,15 +12,11 @@ WORK_DIR="$(cd $(dirname "$0"); pwd)"
 
 #Check if we are running on linux or android (Alternative: adb shell getprop ro.product.cpu.abilist)
 IS_ANDROID_(){
-#Is "uname" present?
-   type uname >/dev/null
+#Is "env" present?
+   type env >/dev/null
    if [ $? -eq 0 ] >/dev/null; then
-        if uname -m | grep "arm"; then
+        if env |grep ANDROID>>/dev/null; then
          IS_ANDROID=1
-        elif uname -m | grep "x86" >/dev/null; then
-         IS_ANDROID=0
-        elif uname -m | grep "x86_64" >/dev/null; then
-         IS_ANDROID=0
         fi
    else
    # If no "uname" present
